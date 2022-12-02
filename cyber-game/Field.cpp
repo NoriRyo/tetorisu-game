@@ -17,7 +17,6 @@ void Field::init()
 
 void Field::update()
 {
-	
 }
 
 void Field::drow()

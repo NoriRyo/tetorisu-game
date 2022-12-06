@@ -26,31 +26,13 @@ void Tetromino::init()
 	m_vec.y = 20.0f;
 	m_size.x = 20;
 	m_size.y = 20;
-}
 
-void Tetromino::update(Vec2 pos)
-{
-	// ”Õ–Ê•\Ž¦
-
-	/*
-	for (y = 0; y < HEIGHT; y++)
-	{
-		for (x = 0; x < WIDTH; x++)
-		{
-			if (board[y][x] == EXIST)
-			{
-				WaitTimer(1000);
-				board[y][x] = NOT_EXIST;
-			}
-		}
-	}
-	*/
 	// ‰Šú
 	for (y = 0; y < HEIGHT; y++)
 	{
 		for (x = 0; x < WIDTH; x++)
 		{
-			if( x == 5 && y == 1)
+			if (x == 5 && y == 1)
 			{
 				board[y][x] = EXIST;
 			}
@@ -60,6 +42,30 @@ void Tetromino::update(Vec2 pos)
 			}
 		}
 	}
+}
+
+void Tetromino::update(Vec2 pos)
+{
+	// ”Õ–Ê•\Ž¦
+
+//WaitTimer(1000);
+	for (y = 0; y < HEIGHT; y++)
+	{
+		for (x = 0; x < WIDTH; x++)
+		{
+			if (board[y][x] == EXIST)
+			{
+				board[y][x] = NOT_EXIST;
+
+				y++;
+				board[y][x] = EXIST;
+				WaitTimer(500);
+			}
+		}
+	}
+	//WaitKey();
+	
+	
 	
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Vec2.h"
+#include "Field.h"
 class Tetromino
 {
 public:
@@ -8,9 +9,20 @@ public:
 
 	void init();
 
-	void update();
+	void update(Vec2 pos);
 
 	void draw();
+
+	// î•ñ‚Ìæ“¾
+	Vec2 getPos() const { return m_pos; }
+
+	//int GetBoard() const { return board[x][y]; }
+
+private:
+
+	int x;
+	int y;
+
 private:
 	// •\¦ˆÊ’u
 	Vec2 m_pos;
@@ -23,5 +35,8 @@ private:
 	unsigned int m_color;
 	// “h‚è‚Â‚Ô‚µ
 	bool m_isFill;
+
+	//Field field;
+	int board[HEIGHT][WIDTH];
 };
 

@@ -1,11 +1,12 @@
 #pragma once
+#pragma once
 #include "Vec2.h"
 #include "Field.h"
-class Tetromino
+class Mino
 {
 public:
-	Tetromino();
-	virtual~Tetromino();
+	Mino();
+	virtual~Mino();
 
 	void init();
 
@@ -38,5 +39,9 @@ private:
 
 	//Field field;
 	int board[HEIGHT][WIDTH];
+
+	int m_waitFrame;
+
+	int count;
 };
 

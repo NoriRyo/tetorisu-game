@@ -2,7 +2,7 @@
 #include "SceneBase.h"
 #include "Vec2.h"
 #include "Field.h"
-#include "Tetromino.h"
+#include "Mino.h"
 
 class SceneMain : public SceneBase
 {
@@ -31,6 +31,6 @@ private:
 	Vec2 m_vec;
 
 	Field field;
-	Tetromino tetromino;
+	Mino tetromino;
 
 };

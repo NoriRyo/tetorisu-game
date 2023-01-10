@@ -3,7 +3,7 @@
 #include "game.h"
 #include <cassert>
 #include "SceneTitle.h"
-#include "Tetromino.h"
+#include "Mino.h"
 #include "Field.h"
 #include "Vec2.h"
 

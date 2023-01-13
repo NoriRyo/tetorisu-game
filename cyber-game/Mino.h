@@ -5,6 +5,10 @@
 class Mino
 {
 public:
+	static constexpr int kFieldX = 12;
+	static constexpr int kFieldY = 22;
+
+public:
 	Mino();
 	virtual~Mino();
 
@@ -38,7 +42,7 @@ private:
 	bool m_isFill;
 
 	//Field field;
-	int board[HEIGHT][WIDTH];
+	int field[kFieldY][kFieldX];
 
 	int m_waitFrame;
 

@@ -1,12 +1,16 @@
 #pragma once
 #include "Vec2.h"
 
-#define HEIGHT 22	//c
-#define WIDTH 12	//‰¡
+//#define kFieldX 12	//‰¡
+//#define kFieldY 22	//c
 
 // ”Õ–Ê•\¦
 class Field
 {
+public:
+	static constexpr int kFieldX = 12;
+	static constexpr int kFieldY = 22;
+
 public:
 	Field();
 	virtual ~Field();
@@ -18,7 +22,7 @@ public:
 	// î•ñ‚Ìæ“¾
 	Vec2 getPos() const { return m_pos; }
 
-	int board[HEIGHT][WIDTH];
+	int board[kFieldY][kFieldX];
 private:
 	// ”Õ–Ê
 

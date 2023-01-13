@@ -1,7 +1,10 @@
 #include "Field.h"
 #include "DxLib.h"
 
-#define WALL 5
+namespace
+{
+	constexpr int Wall = 5;
+}
 
 Field::Field()
 {
@@ -17,7 +20,6 @@ Field::~Field()
 
 void Field::init()
 {
-	//board[h][w] = 1;
 	m_size.x = 20;
 	m_size.y = 20;
 	
@@ -26,21 +28,17 @@ void Field::init()
 void Field::update(Vec2 pos)
 {
 	// ”Õ–Ê•\Ž¦
-	for ( y = 0; y < HEIGHT; y++)
+	for ( y = 0; y < kFieldY; y++)
 	{
-		for (x = 0; x < WIDTH; x++)
+		for (x = 0; x < kFieldX; x++)
 		{
 			if (x == 0 || x == 11 || y == 0 || y == 21)
 			{
-				board[y][x] = WALL;
-				//	DrawBox(m_pos.x, m_pos.y, m_pos.x + m_size.x, m_pos.y + m_size.y,
-				//		GetColor(255, 255, 255), false);
+				board[y][x] = Wall;
 			}
 			else
 			{
 				board[y][x] = 1;
-				//DrawBox(m_pos.x, m_pos.y, m_pos.x + m_size.x, m_pos.y + m_size.y, 
-				//	GetColor(255, 255, 255), false);
 			}
 		}
 	}
@@ -48,28 +46,24 @@ void Field::update(Vec2 pos)
 
 void Field::drow()
 {
-	//clsDx();
-
 	m_pos.y = 6;
-	for ( y = 0; y < HEIGHT; y++)
+	for ( y = 0; y < kFieldY; y++)
 	{
 		m_pos.x = 180;
 		m_pos.y += m_size.y;
-		for ( x = 0; x < WIDTH; x++)
+		for ( x = 0; x < kFieldX; x++)
 		{
 			m_pos.x += m_size.x;
-			if (board[y][x] == WALL)
+			if (board[y][x] == Wall)
 			{
 				DrawBox(m_pos.x, m_pos.y, m_pos.x + m_size.x, m_pos.y + m_size.y,
-					GetColor(255, 255, 255), false);
+					GetColor(255, 255, 255), true);
 			}
 			else
 			{
-				//DrawBox(m_pos.x, m_pos.y, m_pos.x + m_size.x, m_pos.y + m_size.y,
-				//	GetColor(255, 255, 255), true);
+				DrawBox(m_pos.x, m_pos.y, m_pos.x + m_size.x, m_pos.y + m_size.y,
+					GetColor(100, 100, 100), false);
 			}
-			//printfDx("%d", board[y][x]);
 		}
-		//printfDx("\n");
 	}
 }

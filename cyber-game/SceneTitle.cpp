@@ -9,7 +9,7 @@ namespace
 {
 	// 表示する文字列
 	const char* const kTitleText = "テトリス";
-	const char* const kGuideText = "1ボタンを押してください";
+	const char* const kGuideText = "1ボタンを押してください(Zボタン）";
 	// 文字列点滅
 	constexpr int kTextDispFrame = 50;
 	constexpr int kTextHideFrame = 15;
@@ -36,8 +36,19 @@ void SceneTitle::end()
 
 SceneBase* SceneTitle::update()
 {
-	/// /// /// // //
-	return (new SceneMain);
+
+
+
+
+	/// デバック用 ///
+	//return (new SceneMain);
+
+
+
+
+
+
+
 
 	if (isFading())
 	{

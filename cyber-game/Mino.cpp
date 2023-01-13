@@ -5,11 +5,17 @@
 #include "Field.h"
 #include "Pad.h"
 
-#define MOVING 2		// 存在する
-#define NOT_MOVING 1	// 存在しない
-#define WALL 5
-#define WALL_UNDER 6	// 壁下
-#define STOPPED 4		// 止まっている
+//　定数を定義
+namespace
+{
+	constexpr int Empty = 0;		// 空いている
+	constexpr int Stopped = 1;		// 止まっている
+	constexpr int Moving = 2;		// 動いている
+	constexpr int Wall = 5;			// 壁
+	constexpr int WallUnder = 6;	// 壁下
+
+	constexpr int kDropFrame = 30;	// 1ブロック落ちるのにかかるフレーム
+}
 
 Mino::Mino()
 {
@@ -25,25 +31,41 @@ Mino::~Mino()
 
 void Mino::init()
 {
-	//m_pos.x = 320;
-	//m_pos.y = 320;
 	m_vec.x = 20.0f;
 	m_vec.y = 20.0f;
 	m_size.x = 20;
 	m_size.y = 20;
 
-	// 初期
-	for (y = 0; y < HEIGHT; y++)
+	
+
+
+	int mino[4][4] =
 	{
-		for (x = 0; x < WIDTH; x++)
+		// Z
+		{0,0,0,0},
+		{1,1,0,0},
+		{0,1,1,0},
+		{0,0,0,0}
+	};
+
+
+
+
+
+
+
+	// 初期
+	for (int y = 0; y < kFieldY; y++)
+	{
+		for (x = 0; x < kFieldX; x++)
 		{
-			if (x == 5 && y == 1)
+			if (x == 6  && y == 1)
 			{
-				board[y][x] = MOVING;
+				field[y][x] = Moving;
 			}
 			else
 			{
-				board[y][x] = NOT_MOVING;
+				field[y][x] = Empty;
 			}
 		}
 	}
@@ -51,30 +73,32 @@ void Mino::init()
 
 void Mino::update(Vec2 pos)
 {
+
+	int dropFrameCount = 0;
+
 	// パッド(もしくはキーボード)からの入力を取得する
 	int padState = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-	for (y = 0; y < HEIGHT; y++)
+	for (y = 0; y < kFieldY; y++)
 	{
-		for (x = 0; x < WIDTH; x++)
+		for (x = 0; x < kFieldX; x++)
 		{
 			if (x == 0 || x == 11 || y == 0)
 			{
-				board[y][x] = WALL;
+				field[y][x] = Wall;
 			}
 			if (y == 21)
 			{
-				board[y][x] = WALL_UNDER;
+				field[y][x] = WallUnder;
 			}
 
-			if (board[y][x] == MOVING)
+			if (field[y][x] == Moving)
 			{
-				board[y][x] = NOT_MOVING;
-				WaitTimer(100);
+				field[y][x] = Empty;
 
 				//　入力でミノを左に移動
 				if (padState & PAD_INPUT_LEFT)
 				{
-					if (board[y][x - 1] == WALL)
+					if (field[y][x - 1] == Wall || field[y][x - 1] == Stopped)
 					{
 						x++;
 					}
@@ -83,30 +107,35 @@ void Mino::update(Vec2 pos)
 				//　入力でミノを右に移動
 				else if (padState & PAD_INPUT_RIGHT)
 				{
-					if (board[y][x + 1] == WALL)
+					if (field[y][x + 1] == Wall || field[y][x + 1] == Stopped)
 					{
 						x--;
 					}
 					x++;
 				}
 
-				//　ミノを下に移動
+				//////////////////////////////////////////////////////////
+				//dropFrameCount ++;
+				//if (dropFrameCount >= kDropFrame)
+				//{
+				//	//　ミノを下に移動
+				//	dropFrameCount = 0;
+				//}
+				/////////////////////////////////////////////////////////
+					
 				y++;
 
+
+				WaitTimer(150);
 				// ミノがぶつかったら止まって次のミノを出す
-				if (board[y + 1][x] == WALL_UNDER || (board[y + 1][x] == 4))
+				if (field[y + 1][x] == WallUnder || (field[y + 1][x] == Stopped))
 				{
-					board[y][x] = STOPPED;
+					field[y][x] = Stopped;
 					
-					board[1][5] = MOVING;
+					field[1][6] = Moving;
 					continue;
 				}
-				board[y][x] = MOVING;
-			}
-
-			if (board[y][x] == STOPPED)
-			{
-				count++;
+				field[y][x] = Moving;
 			}
 		}
 	}
@@ -115,33 +144,52 @@ void Mino::update(Vec2 pos)
 void Mino::draw()
 {
 	clsDx();
-	printfDx("                                                 %d", count);
 	printfDx("\n");
 	m_pos.y = 6;
-	for (y = 0; y < HEIGHT; y++)
+	for (y = 0; y < kFieldY; y++)
 	{
+		count = 0;
 		m_pos.x = 180;
 		m_pos.y += m_size.y;
-		for (x = 0; x < WIDTH; x++)
+		for (x = 0; x < kFieldX; x++)
 		{
 			m_pos.x += m_size.x;
-
+			
+			// 列ごとのミノをカウントする
+			if (field[y][x] == Stopped)
+			{
+				count += field[y][x];
+			}
+			// 列のミノが１０になったら消す
+			if (count == 10)
+			{
+				for (x = 0; x < kFieldX; x++)
+				{
+					if (field[y][x] == Stopped)
+					{
+						field[y][x] = Empty;
+					}
+				}
+			}
 			//　動いているミノを表示
-			if (board[y][x] == MOVING)
+			if (field[y][x] == Moving)
 			{
 				DrawBox(m_pos.x, m_pos.y, m_pos.x + m_size.x, m_pos.y + m_size.y,
-					GetColor(255, 0, 0), true);
+					GetColor(0, 255, 255), true);
 			}
 			//　止まっているミノを表示
-			else if (board[y][x] == STOPPED)
+			else if (field[y][x] == Stopped)
 			{
 				DrawBox(m_pos.x, m_pos.y, m_pos.x + m_size.x, m_pos.y + m_size.y,
-					GetColor(255, 255, 255), true);
+					GetColor(0, 255, 255), true);	
 			}
 
+
 			//　盤面の数値を表示（デバッグ用）
-			printfDx("%d", board[y][x]);
+			//printfDx("%d", field[y][x]);
 		}
+		//　列ごとのミノの数を表示
+	//	printfDx("  %d", count);
 		printfDx("\n");
 	}
 }
